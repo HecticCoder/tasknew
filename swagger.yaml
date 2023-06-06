@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  title: Todo API
+  description: API for managing todos
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /todos:
+    get:
+      summary: Get all todos
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+    post:
+      summary: Create a new todo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTodo'
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+  /todos/{id}:
+    put:
+      summary: Update the status of a todo
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the todo to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoStatus'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: Todo not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    delete:
+      summary: Delete a todo
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID of the todo to delete
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: Todo not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+components:
+  schemas:
+    Todo:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the todo
+        text:
+          type: string
+          description: Text of the todo
+        checked:
+          type: boolean
+          description: Status of the todo
+    NewTodo:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Text of the new todo
+    TodoStatus:
+      type: object
+      properties:
+        checked:
+          type: boolean
+          description: Status of the todo
+# ... previous Swagger API documentation ...
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+# ... previous Swagger API documentation ...
+
+security:
+  - bearerAuth: []
+
